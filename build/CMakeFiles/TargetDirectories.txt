@@ -1,0 +1,9 @@
+D:/NEU study file/5330/HW_2/build/CMakeFiles/Experimental.dir
+D:/NEU study file/5330/HW_2/build/CMakeFiles/Nightly.dir
+D:/NEU study file/5330/HW_2/build/CMakeFiles/Continuous.dir
+D:/NEU study file/5330/HW_2/build/CMakeFiles/NightlyMemoryCheck.dir
+D:/NEU study file/5330/HW_2/build/CMakeFiles/HW_2.dir
+D:/NEU study file/5330/HW_2/build/CMakeFiles/PACKAGE.dir
+D:/NEU study file/5330/HW_2/build/CMakeFiles/RUN_TESTS.dir
+D:/NEU study file/5330/HW_2/build/CMakeFiles/ALL_BUILD.dir
+D:/NEU study file/5330/HW_2/build/CMakeFiles/ZERO_CHECK.dir

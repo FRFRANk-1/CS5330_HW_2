@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Win32-MSBuild"
+	BuildStamp="20240129-2144-Experimental"
+	Name="FRFRANK"
+	Generator="ctest-3.28.1"
+	CompilerName="C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133/bin/Hostx64/x64/cl.exe"
+	CompilerVersion="19.29.30151.0"
+	OSName="Windows"
+	Hostname="FRFRANK"
+	OSRelease=" Personal"
+	OSVersion=" (Build 22621)"
+	OSPlatform="AMD64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="13"
+	ProcessorCacheSize="-1"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="6"
+	TotalVirtualMemory="46826"
+	TotalPhysicalMemory="32490"
+	LogicalProcessorsPerPhysical="2"
+	ProcessorClockFrequency="2611"
+	>
+	<Testing>
+		<StartDateTime>Jan 29 16:50 Eastern Standard Time</StartDateTime>
+		<StartTestTime>1706565002</StartTestTime>
+		<TestList/>
+		<EndDateTime>Jan 29 16:50 Eastern Standard Time</EndDateTime>
+		<EndTestTime>1706565002</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>
