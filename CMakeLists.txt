@@ -7,7 +7,7 @@ enable_testing()
 find_package( Opencv REQUIRED)
 include_directories( ${OpenCV_INCLUDE_DIRS})
 
-add_executable(HW_2 main.cpp)
+add_executable(HW_2 main.cpp DirectoryReader.cpp)
 
 target_link_libraries( HW_2 ${OpenCV_LIBS})
 

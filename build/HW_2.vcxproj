@@ -318,6 +318,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="D:\NEU study file\5330\HW_2\main.cpp" />
+    <ClCompile Include="D:\NEU study file\5330\HW_2\DirectoryReader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:\NEU study file\5330\HW_2\build\ZERO_CHECK.vcxproj">
