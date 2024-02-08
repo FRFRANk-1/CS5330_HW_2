@@ -4,7 +4,10 @@
     <ClCompile Include="D:\NEU study file\5330\HW_2\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\NEU study file\5330\HW_2\DirectoryReader.cpp">
+    <ClCompile Include="D:\NEU study file\5330\HW_2\csv_util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\NEU study file\5330\HW_2\process_Img_funs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

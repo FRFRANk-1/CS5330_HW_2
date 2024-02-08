@@ -93,6 +93,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -135,6 +136,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -179,6 +181,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>MinSpace</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -224,6 +227,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -318,7 +322,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="D:\NEU study file\5330\HW_2\main.cpp" />
-    <ClCompile Include="D:\NEU study file\5330\HW_2\DirectoryReader.cpp" />
+    <ClCompile Include="D:\NEU study file\5330\HW_2\csv_util.cpp" />
+    <ClCompile Include="D:\NEU study file\5330\HW_2\process_Img_funs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:\NEU study file\5330\HW_2\build\ZERO_CHECK.vcxproj">
