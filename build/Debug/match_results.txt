@@ -1,0 +1,4 @@
+pic.0002.jpg,0
+pic.0694.jpg,315
+pic.0737.jpg,349
+pic.0801.jpg,402

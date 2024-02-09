@@ -8,6 +8,7 @@
 #include "kmeans.h"
 #include "DirectoryReader.h"
 #include "process_Img_funs.h"
+#include <filesystem>
 
 int main(int argc, char** argv) {
 
@@ -32,13 +33,14 @@ int main(int argc, char** argv) {
         return 1;
     }
 
+
     // command line arguments
     std :: string target_image = argv[1];
     std :: string image_database_dir = argv[2];
     std :: string feature_type = argv[3];
     std :: string distance_metric = argv[4];
     int number_of_output = std :: stoi(argv[5]); // convert string to int
-
+    
     // debug: print the argumens to verify
     std :: cout << "target image:" << target_image << std :: endl;
     std :: cout << "image database dir:" << image_database_dir << std :: endl;
@@ -47,34 +49,46 @@ int main(int argc, char** argv) {
     std :: cout << "number of output:" << number_of_output << std :: endl;
     
     try {
+        // Compute features for the target image
         cv::Mat targetImage = cv::imread(target_image, cv::IMREAD_GRAYSCALE);
         if (targetImage.empty()) {
             throw std::runtime_error("Failed to open target image: " + target_image);
         }
+        std::vector<float> targetFeatures = extractBaseLineFeatures(targetImage);
 
-        auto targetFeatures = extractBaseLineFeatures(targetImage);
-        auto databaseFeatures = computeDataBaseFeatures(image_database_dir);
-        auto matches = findClosestMatches(targetFeatures, databaseFeatures, number_of_output);
+        // Compute features for all images in the database
+        std::vector<std::pair<std::string, std::vector<float>>> databaseFeatures = computeDataBaseFeatures(image_database_dir);
 
+        // Find closest matches
+        std::vector<MatchResult> matches = computeAndStoreResults(target_image, databaseFeatures, number_of_output);
+        // Display matches
         for (const auto& match : matches) {
-            std::cout << "Match: " << match.first << " Distance: " << match.second << std::endl;
-            std::string imagePath = image_database_dir + "\\" + match.first;
-            cv::Mat matchedImage = cv::imread(imagePath, cv::IMREAD_COLOR);
-            if (matchedImage.empty()) {
-                std::cerr << "Could not open or find the image: " << imagePath << std::endl;
-                continue;
+        std::cout << "Match: " << match.filename << " Distance: " << match.distance << std::endl;
+        std::string imagePath = image_database_dir + "/" + match.filename; // Ensure correct path
+        cv::Mat image = cv::imread(imagePath, cv::IMREAD_COLOR);
+        if (image.empty()) {
+            std::cerr << "Could not open or find the image: " << imagePath << std::endl;
+            continue; // Skip this iteration if image not found
             }
-
-            // Display the image
-            cv::imshow("Match: " + match.first + " Distance: " + std::to_string(match.second), matchedImage);
+        cv::imshow("Match: " + match.filename, image);
+        cv::waitKey(0); // Wait indefinitely for a key press before moving to the next image
         }
 
-        // Wait for a keystroke in the window
-        cv::waitKey(0);
+        std::cout << "Writing results to file..." << std::endl;
+        std::string outputFile = "match_results.txt";
+        computeAndStoreResultsAndWriteToFile(target_image, image_database_dir, number_of_output, outputFile);
+
+            std::filesystem::path cwd = std::filesystem::current_path();
+
+    // Print the current working directory
+        std::cout << "Current working directory: " << cwd << std::endl;
+
+        std::cout << "Results written to file: " << outputFile << std::endl;
+        
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
-        return 1;
-    }
+        return -1;
+    }   
 
     return 0;
 }
