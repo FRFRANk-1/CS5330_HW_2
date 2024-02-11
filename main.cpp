@@ -9,6 +9,7 @@
 #include "DirectoryReader.h"
 #include "baseline_matching.h"
 #include "histogram_matching.h"
+#include "multiple_histogram_matching.h"
 #include <filesystem>
 
 int main(int argc, char** argv) {
@@ -46,6 +47,8 @@ int main(int argc, char** argv) {
         else if (feature_type == "histogram") {
         std :: cout << "histogram:" << std :: endl;
         Histogram_Matching(target_image, image_database_dir, comparisonMethodStr, number_of_output);
+        } else if (feature_type == "multiple_histograms") {
+        performMultipleHistogramMatching(target_image, image_database_dir, number_of_output);
         }
         else {
             std :: cerr << "Invalid feature type: " << feature_type << std :: endl;

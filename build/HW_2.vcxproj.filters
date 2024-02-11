@@ -10,6 +10,9 @@
     <ClCompile Include="D:\NEU study file\5330\HW_2\baseline_matching.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\NEU study file\5330\HW_2\multiple_histogram_matching.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="D:\NEU study file\5330\HW_2\CMakeLists.txt" />
