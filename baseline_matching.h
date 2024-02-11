@@ -27,4 +27,11 @@ std::vector<MatchResult> computeAndStoreResults(const std::string& target_image_
 void computeAndStoreResultsAndWriteToFile(const std::string& target_image, const std::string& image_database_dir, int number_of_output, const std::string& output_file);
 float calculateSSDDistance(const std::vector<float>& feature1, const std::vector<float>& feature2);
 
+// Function to print feature comparisons
+void printFeatureComparisons(const std::string& target_image_path, const std::vector<std::pair<std::string, std::vector<float>>>& databaseFeatures);
+
+// Function to display top matches
+void displayTopMatches(const std::vector<MatchResult>& matches, const std::string& image_database_dir, int number_of_top_matches);
+
+
 #endif // BASELINE_MATCHING_H

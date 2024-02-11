@@ -34,10 +34,24 @@ int main(int argc, char** argv) {
     std :: cout << "comparison method:" << comparisonMethodStr << std :: endl;
     std :: cout << "number of output:" << number_of_output << std :: endl;
     std :: string output_file = "output.txt";
+
+    std::vector<MatchResult> matches;
+
     try {
         if (feature_type == "baseline") {
+        std::vector<std::pair<std::string, std::vector<float>>> databaseFeatures = computeDataBaseFeatures(image_database_dir);
+        matches = computeAndStoreResults(target_image, databaseFeatures, number_of_output);
+        printFeatureComparisons(target_image, databaseFeatures);
+        
+        std::cout << "Top " << number_of_output << " closest matches to the target image:" << std::endl;
+        for (const auto& match : matches) {
+            std::cout << "Image: " << match.filename << ", Distance: " << match.distance << std::endl;
+        }
+
+        displayTopMatches(matches, image_database_dir, number_of_output);
+        
         computeAndStoreResultsAndWriteToFile(target_image, image_database_dir, number_of_output, output_file);
-        std::cout << "Matching results have been successfully written to: " << output_file << std::endl;
+        std::cout << "Matching results have been successfully written to [HW_2 -> build -> debug]:" << output_file << std::endl;
          }
         else if (feature_type == "histogram") {
         std :: cout << "histogram:" << std :: endl;

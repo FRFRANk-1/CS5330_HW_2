@@ -10,6 +10,7 @@ cv::Mat calcHistForImage(const cv::Mat& image, int bins) {
     const float* ranges[] = {range};
     int channels[] = {0};
 
+    // Compute histogram
     cv::calcHist(&image, 1, channels, cv::Mat(), hist, 1, histSize, ranges, true, false);
     cv::normalize(hist, hist, 0, 1, cv::NORM_MINMAX);
 
@@ -37,12 +38,12 @@ void Histogram_Matching(const std::string& target_histogram_image, const std::st
     }
 
     // Load the target image
-    cv::Mat target_image = cv::imread(target_histogram_image, cv::IMREAD_GRAYSCALE);
+    cv::Mat target_image = cv::imread(target_histogram_image, cv::IMREAD_COLOR);
     if (target_image.empty()) {
         std::cerr << "Failed to load target image: " << target_histogram_image << std::endl;
         return;
     }
-    cv::Mat target_hist = calcHistForImage(target_image, 32); // Assuming 32 bins
+    cv::Mat target_hist = calcHistForImage(target_image, 16); // 32 bins
 
     std::vector<HistogramMatchResult> matches;
 
@@ -50,12 +51,12 @@ void Histogram_Matching(const std::string& target_histogram_image, const std::st
     for (const auto& entry : std::filesystem::directory_iterator(image_database_dir)) {
         std::string filepath = entry.path().string();
         if (filepath != target_histogram_image) {
-            cv::Mat image = cv::imread(filepath, cv::IMREAD_GRAYSCALE);
+            cv::Mat image = cv::imread(filepath, cv::IMREAD_COLOR);
             if (image.empty()) {
                 std::cerr << "Failed to load image: " << filepath << std::endl;
                 continue;
             }
-            cv::Mat hist = calcHistForImage(image, 32); // Assuming 32 bins
+            cv::Mat hist = calcHistForImage(image, 16); //  32 bins
             float similarity = compareHistograms(target_hist, hist, comparisonMethod);
             matches.emplace_back(filepath, similarity);
         }
@@ -77,7 +78,7 @@ void Histogram_Matching(const std::string& target_histogram_image, const std::st
     // Display the top N matches
     for (int i = 0; i < std::min(number_of_output, static_cast<int>(matches.size())); i++) {
         std::string matchFilePath = matches[i].filename;
-        cv::Mat matchImage = cv::imread(matchFilePath, cv::IMREAD_GRAYSCALE);
+        cv::Mat matchImage = cv::imread(matchFilePath, cv::IMREAD_COLOR);
         if (!matchImage.empty()) {
             std::string windowName = "Match " + std::to_string(i + 1);
             cv::namedWindow(windowName, cv::WINDOW_AUTOSIZE);

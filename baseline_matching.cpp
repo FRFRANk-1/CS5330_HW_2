@@ -45,6 +45,18 @@ std::vector<MatchResult> computeAndStoreResults(const std::string& target_image_
     return results;
 }
 
+float calculateSSDDistance(const std::vector<float>& feature1, const std::vector<float>& feature2) {
+    if (feature1.size() != feature2.size()) {
+        throw std::runtime_error("Feature vectors need to be the same size to calculate SSD");
+    }
+
+    float sum = 0.0f;
+    for (size_t i = 0; i < feature1.size(); i++) {
+        sum += (feature1[i] - feature2[i]) * (feature1[i] - feature2[i]);
+    }
+    return sum;
+}
+
 void computeAndStoreResultsAndWriteToFile(const std::string& target_image, const std::string& image_database_dir, int number_of_output, const std::string& output_file) {
     std::vector<std::pair<std::string, std::vector<float>>> databaseFeatures = computeDataBaseFeatures(image_database_dir);
     std::vector<MatchResult> matches = computeAndStoreResults(target_image, databaseFeatures, number_of_output);
@@ -59,14 +71,35 @@ void computeAndStoreResultsAndWriteToFile(const std::string& target_image, const
     outputFile.close();
 }
 
-float calculateSSDDistance(const std::vector<float>& feature1, const std::vector<float>& feature2) {
-    if (feature1.size() != feature2.size()) {
-        throw std::runtime_error("Feature vectors need to be the same size to calculate SSD");
+void printFeatureComparisons(const std::string& target_image_path, const std::vector<std::pair<std::string, std::vector<float>>>& databaseFeatures) {
+    cv::Mat targetImage = cv::imread(target_image_path, cv::IMREAD_GRAYSCALE);
+    if (targetImage.empty()) {
+        std::cerr << "Error: Target image could not be loaded." << std::endl;
+        return;
     }
 
-    float sum = 0.0f;
-    for (size_t i = 0; i < feature1.size(); i++) {
-        sum += (feature1[i] - feature2[i]) * (feature1[i] - feature2[i]);
+    auto targetFeatures = extractBaseLineFeatures(targetImage);
+    std::cout << "Comparing features with target image: " << target_image_path << std::endl;
+
+    for (const auto& [filename, features] : databaseFeatures) {
+        float distance = calculateSSDDistance(targetFeatures, features);
+        std::cout << "Image: " << filename << ", Distance: " << distance << std::endl;
     }
-    return sum;
+}
+
+#include <opencv2/highgui/highgui.hpp> // For cv::imshow, cv::waitKey, cv::namedWindow
+
+void displayTopMatches(const std::vector<MatchResult>& matches, const std::string& image_database_dir, int number_of_top_matches) {
+    for (int i = 0; i < number_of_top_matches && i < matches.size(); ++i) {
+        const auto& match = matches[i];
+        std::string imagePath = image_database_dir + "/" + match.filename;
+        cv::Mat image = cv::imread(imagePath);
+        if (!image.empty()) {
+            cv::namedWindow(match.filename, cv::WINDOW_AUTOSIZE); // Create a window for display.
+            cv::imshow(match.filename, image); // Show our image inside it.
+        } else {
+            std::cerr << "Failed to load image at " << imagePath << std::endl;
+        }
+    }
+    cv::waitKey(0); // Wait for a keystroke in the window
 }
