@@ -33,5 +33,8 @@ void printFeatureComparisons(const std::string& target_image_path, const std::ve
 // Function to display top matches
 void displayTopMatches(const std::vector<MatchResult>& matches, const std::string& image_database_dir, int number_of_top_matches);
 
+// In baseline_matching.h
+void performBaselineMatchingAndDisplayResults(const std::string& target_image_path, const std::string& image_database_dir, int number_of_output, const std::string& output_file);
+
 
 #endif // BASELINE_MATCHING_H

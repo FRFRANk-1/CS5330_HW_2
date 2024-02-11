@@ -103,3 +103,35 @@ void displayTopMatches(const std::vector<MatchResult>& matches, const std::strin
     }
     cv::waitKey(0); // Wait for a keystroke in the window
 }
+
+
+// In baseline_matching.cpp
+#include "baseline_matching.h"
+#include <opencv2/highgui/highgui.hpp> // Ensure OpenCV GUI headers are included
+
+void performBaselineMatchingAndDisplayResults(const std::string& target_image_path, const std::string& image_database_dir, int number_of_output, const std::string& output_file) {
+    // Compute database features
+    auto databaseFeatures = computeDataBaseFeatures(image_database_dir);
+    
+    // Compute and sort results
+    auto matches = computeAndStoreResults(target_image_path, databaseFeatures, number_of_output);
+    
+    // Print comparisons to console
+    std::cout << "Comparing features with target image: " << target_image_path << std::endl;
+    for (const auto& match : matches) {
+        std::cout << "Image: " << match.filename << ", Distance: " << match.distance << std::endl;
+    }
+
+    // Optionally write to output file (if needed)
+    std::ofstream outputFile(output_file);
+    if (!outputFile.is_open()) {
+        throw std::runtime_error("Failed to open output file: " + output_file);
+    }
+    for (const auto& match : matches) {
+        outputFile << match.filename << "," << match.distance << std::endl;
+    }
+    outputFile.close();
+
+    // Display top matches
+    displayTopMatches(matches, image_database_dir, number_of_output);
+}
