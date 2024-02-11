@@ -1,19 +1,23 @@
 #ifndef MULTIPLE_HISTOGRAM_MATCHING_H
 #define MULTIPLE_HISTOGRAM_MATCHING_H
 
-#include <opencv2/core.hpp>
 #include <string>
-#include <vector>
+#include <opencv2/core.hpp> // Include necessary OpenCV headers
 
-struct multipleHistogramMatch {
+class multipleHistogramMatch {
+public:
     std::string filename;
     float distance;
 
-    multipleHistogramMatch(std::string f, float d);
+    multipleHistogramMatch(std::string f, float s);
 };
 
+float calculateSSD(const cv::Mat& hist1, const cv::Mat& hist2);
 
-// Function declarations
-void performMultipleHistogramMatching(const std::string& target_image_path, const std::string& image_database_dir, int number_of_output);
+cv::Mat calculateHistogram(const cv::Mat& image, int bins);
+
+float compareHistograms(const cv::Mat& histA, const cv::Mat& histB, int method);
+
+void performMultipleHistogramMatching(const std::string& target_multiple_path, const std::string& image_database_dir, int number_of_output);
 
 #endif // MULTIPLE_HISTOGRAM_MATCHING_H
