@@ -14,8 +14,8 @@ void BananaCBIR::buildFeatureDatabase() {
     for (const auto& entry : std::filesystem::directory_iterator(databaseDir)) {
         std::string filePath = entry.path().string();
         std::string filename = entry.path().filename().string();
-        // cv::Mat image = cv::imread(entry.path().string());
 
+        // Check for image files only (you might want to add more conditions for other image formats)
         if (filename[0] == '.' || (filename.find(".jpg") == std::string::npos && filename.find(".png") == std::string::npos)) {
             std::cout << "Skipping non-image file: " << filename << std::endl;
             continue;
@@ -27,66 +27,71 @@ void BananaCBIR::buildFeatureDatabase() {
             continue;
         }
 
-        std::cout << "Processing file: " << filename << std::endl;
+        // std::cout << "Processing file: " << filename << std::endl;
 
-            cv::Mat colorHist = calculateColorHistogram(image);
-            cv::Mat shapeDesc = calculateShapeDescriptor(image);
-            cv::Mat textureDesc = calculateTextureDescriptor(image);
+        cv::Mat colorHist = calculateColorHistogram(image);
+        cv::Mat shapeDesc = calculateShapeDescriptor(image);
+        cv::Mat textureDesc = calculateTextureDescriptor(image);
 
-        for (const auto& entry : std::filesystem::directory_iterator(databaseDir)) {
-            std::cout << "Processing file: " << entry.path().filename().string() << std::endl;
-            cv::Mat image = cv::imread(entry.path().string());
+        // Ensure the descriptors are of the same type and have a single row for concatenation.
+        colorHist.convertTo(colorHist, CV_32F);
+        shapeDesc.convertTo(shapeDesc, CV_32F);
+        textureDesc.convertTo(textureDesc, CV_32F);
+        colorHist = colorHist.reshape(1, 1);
+        shapeDesc = shapeDesc.reshape(1, 1);
+        textureDesc = textureDesc.reshape(1, 1);
+
+        auto padToMaxCols = [](const cv::Mat &mat, int maxCols) {
+    if (mat.cols >= maxCols) return mat;
+    int deltaCols = maxCols - mat.cols;
+    cv::Mat padded;
+    cv::copyMakeBorder(mat, padded, 0, 0, 0, deltaCols, cv::BORDER_CONSTANT, 0);
+    return padded;
+};
+        // std::cout << "maxcols " << filename << std::endl;
+        int maxCols = std::max({colorHist.cols, shapeDesc.cols, textureDesc.cols});
+
+        auto padFeatureVector = [maxCols](const cv::Mat& feature) -> cv::Mat {
+        if (feature.cols < maxCols) {
+        cv::Mat padded;
+        cv::copyMakeBorder(feature, padded, 0, 0, 0, maxCols - feature.cols, cv::BORDER_CONSTANT, cv::Scalar::all(0));
+        return padded;
+        }
+        return feature;
+};
+        colorHist = padFeatureVector(colorHist);
+        shapeDesc = padFeatureVector(shapeDesc);
+        textureDesc = padFeatureVector(textureDesc);
         
-            if (!image.empty()) {}
+        // std::cout << "maxcols_1 " << filename << std::endl;
 
-            cv::Mat colorHist = calculateColorHistogram(image);
-            cv::Mat shapeDesc = calculateShapeDescriptor(image);
-            cv::Mat textureDesc = calculateTextureDescriptor(image);
-
-            colorHist.convertTo(colorHist, CV_32F);
-            shapeDesc.convertTo(shapeDesc, CV_32F);
-            textureDesc.convertTo(textureDesc, CV_32F);
-            colorHist = colorHist.reshape(1, 1);
-            shapeDesc = shapeDesc.reshape(1, 1);
-            textureDesc = textureDesc.reshape(1, 1);
+        auto ensureSize = [maxCols](const cv::Mat &feature) {
+    if (feature.cols < maxCols) {
+        cv::Mat temp(maxCols - feature.cols, 1, feature.type(), cv::Scalar(0));
+        return cv::Mat(1, maxCols, feature.type());
         
-        // Check if all descriptors have the same number of columns. If not, you need to pad them.
-            int maxCols = std::max({colorHist.cols, shapeDesc.cols, textureDesc.cols});
-            cv::Mat temp;
-            if (colorHist.cols < maxCols) {
-            temp = cv::Mat::zeros(1, maxCols - colorHist.cols, colorHist.type());
-            cv::hconcat(colorHist, temp, colorHist);
-        }
-            if (shapeDesc.cols < maxCols) {
-            cv::Mat temp = cv::Mat::zeros(1, maxCols - shapeDesc.cols, shapeDesc.type());
-            cv::hconcat(shapeDesc, temp, shapeDesc);
-        }
-            if (textureDesc.cols < maxCols) {
-            cv::Mat temp = cv::Mat::zeros(1, maxCols - textureDesc.cols, textureDesc.type());
-            cv::hconcat(textureDesc, temp, textureDesc);
-        }
-
-           
-            if (colorHist.type() != shapeDesc.type() || colorHist.type() != textureDesc.type() ||
-            colorHist.rows != 1 || shapeDesc.rows != 1 || textureDesc.rows != 1) {
-            std::cerr << "Error: Feature vectors have different types or multiple rows." << std::endl;
-            return;
-            }
-
-            // Concatenate the feature vectors
-            std::vector<cv::Mat> features = { colorHist, shapeDesc, textureDesc };
-            cv::Mat featureVector;
-            cv::hconcat(std::vector<cv::Mat>{colorHist, shapeDesc, textureDesc}, featureVector);
-            // cv::Mat features = extractFeatures(image);
-            std::cout << "test_6_debug" << std::endl;
-            featureDatabase.push_back({entry.path().filename().string(), featureVector});
-        }
-        std::cout << "Feature database built successfully." << std::endl;
     }
+    return feature;
+};
+
+        // Ensure all vectors have the same size
+        colorHist = ensureSize(colorHist);
+        shapeDesc = ensureSize(shapeDesc);
+        textureDesc = ensureSize(textureDesc);
+
+        // Now concatenate the vectors
+        std::vector<cv::Mat> features = {colorHist, shapeDesc, textureDesc};
+        cv::Mat featureVector;
+        cv::hconcat(features.data(), features.size(), featureVector);
+
+        featureDatabase.push_back({filename, featureVector});
+    }
+    std::cout << "Feature database built successfully." << std::endl;
 }
 
 std::vector<BananaMatchResult> BananaCBIR::queryImage(const cv::Mat& queryImage, int topK) {
     cv::Mat queryFeatures = extractFeatures(queryImage);
+    std::cout << "debug_test_2." << std::endl;
     std::vector<BananaMatchResult> results;    
 
     for (const auto& [filename, features] : featureDatabase) {

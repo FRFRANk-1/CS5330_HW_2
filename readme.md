@@ -37,14 +37,14 @@ step 3 -> at terminal, input:".\HW_2.exe "D:\NEU study file\5330\HW_2\Question_9
 To look up results, which is stored in "D:\\NEU study file\\5330\\HW_2\\build\\Debug"
 
 terminal input:
-.\HW_2.exe "D:\NEU study file\5330\HW_2\olympus\pic.0002.jpg" "D:\NEU study file\5330\HW_2\olympus" "baseline" "SSD" 4  
+.\HW_2.exe "D:\NEU study file\5330\HW_2\olympus\pic.0164.jpg" "D:\NEU study file\5330\HW_2\olympus" "baseline" "SSD" "CORRELATION" 5."D:/NEU study file/5330/HW_2/build/Debug/HW_2.exe"
 
 .\HW_2.exe "D:\NEU study file\5330\HW_2\olympus\pic.1016.jpg" "D:\NEU study file\5330\HW_2\olympus" 4 "match_results.txt"
 
 ## task 2
 
 terminal input: 
-.\HW_2.exe "D:\NEU study file\5330\HW_2\olympus\pic.0274.jpg" "D:\NEU study file\5330\HW_2\olympus" "histogram" "intersection" 3
+.\HW_2.exe "D:\NEU study file\5330\HW_2\olympus\pic.0164.jpg" "D:\NEU study file\5330\HW_2\olympus" "histogram" "SSD" "CHI_SQUARE" 3   
 
 .\HW_2.exe "D:\NEU study file\5330\HW_2\olympus\pic.0164.jpg" "D:\NEU study file\5330\HW_2\olympus" 3 "baseline_result.txt"  
 
@@ -69,5 +69,8 @@ terminal input:
 terminal input:
  .\HW_2.exe "D:\NEU study file\5330\HW_2\olympus\pic.1072.jpg" "D:\NEU study file\5330\HW_2\olympus" "texture_color" "SSD" "intersection" 3 
 
- ## extendition:
+ ## extension:
+
+ terminal input:
+ .\HW_2.exe "D:\NEU study file\5330\HW_2\banana.jpg" "D:\NEU study file\5330\HW_2\olympus" banana euclidean L2 5
  

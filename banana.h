@@ -29,6 +29,7 @@ private:
     static cv::Mat calculateShapeDescriptor(const cv::Mat& image);
     static cv::Mat calculateTextureDescriptor(const cv::Mat& image);
     static float compareFeatures(const cv::Mat& features1, const cv::Mat& features2);
+    void padFeatureVector(cv::Mat& feature, int maxCols);
 };
 
 void banana_matching(const std::string& target_image_path, const std::string& image_database_dir, int top_k);
