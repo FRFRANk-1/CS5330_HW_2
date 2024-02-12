@@ -4,64 +4,84 @@
 #include <opencv2/highgui.hpp>
 #include <filesystem>
 #include <numeric>
+#include <vector>
+#include <iostream>
 
 BananaCBIR::BananaCBIR(const std::string& dbDir) : databaseDir(dbDir) {}
 
 void BananaCBIR::buildFeatureDatabase() {
-    std::cout << "test_1_debug" << std::endl;
+    std::cout << "Building feature database" << std::endl;
     for (const auto& entry : std::filesystem::directory_iterator(databaseDir)) {
-        cv::Mat image = cv::imread(entry.path().string());
-        if (!image.empty()) {
+        std::string filePath = entry.path().string();
+        std::string filename = entry.path().filename().string();
+        // cv::Mat image = cv::imread(entry.path().string());
+
+        if (filename[0] == '.' || (filename.find(".jpg") == std::string::npos && filename.find(".png") == std::string::npos)) {
+            std::cout << "Skipping non-image file: " << filename << std::endl;
+            continue;
+        }
+
+        cv::Mat image = cv::imread(filePath);
+        if (image.empty()) {
+            std::cerr << "Error: Could not open or find the image: " << filename << std::endl;
+            continue;
+        }
+
+        std::cout << "Processing file: " << filename << std::endl;
+
             cv::Mat colorHist = calculateColorHistogram(image);
             cv::Mat shapeDesc = calculateShapeDescriptor(image);
             cv::Mat textureDesc = calculateTextureDescriptor(image);
 
-for (const auto& entry : std::filesystem::directory_iterator(databaseDir)) {
-    std::cout << "Processing file: " << entry.path().filename().string() << std::endl;
-    cv::Mat image = cv::imread(entry.path().string());
-    if (!image.empty()) {}
+        for (const auto& entry : std::filesystem::directory_iterator(databaseDir)) {
+            std::cout << "Processing file: " << entry.path().filename().string() << std::endl;
+            cv::Mat image = cv::imread(entry.path().string());
+        
+            if (!image.empty()) {}
 
             cv::Mat colorHist = calculateColorHistogram(image);
             cv::Mat shapeDesc = calculateShapeDescriptor(image);
             cv::Mat textureDesc = calculateTextureDescriptor(image);
 
-            if (colorHist.type() != CV_32F) colorHist.convertTo(colorHist, CV_32F);
-            if (shapeDesc.type() != CV_32F) shapeDesc.convertTo(shapeDesc, CV_32F);
-            if (textureDesc.type() != CV_32F) textureDesc.convertTo(textureDesc, CV_32F);
-// Check if all descriptors have the same number of columns. If not, you need to pad them.
-int maxCols = std::max({colorHist.cols, shapeDesc.cols, textureDesc.cols});
-if (colorHist.cols < maxCols) {
-    cv::Mat temp = cv::Mat::zeros(1, maxCols - colorHist.cols, colorHist.type());
-    cv::hconcat(colorHist, temp, colorHist);
-}
-if (shapeDesc.cols < maxCols) {
-    cv::Mat temp = cv::Mat::zeros(1, maxCols - shapeDesc.cols, shapeDesc.type());
-    cv::hconcat(shapeDesc, temp, shapeDesc);
-}
-if (textureDesc.cols < maxCols) {
-    cv::Mat temp = cv::Mat::zeros(1, maxCols - textureDesc.cols, textureDesc.type());
-    cv::hconcat(textureDesc, temp, textureDesc);
-}
-
+            colorHist.convertTo(colorHist, CV_32F);
+            shapeDesc.convertTo(shapeDesc, CV_32F);
+            textureDesc.convertTo(textureDesc, CV_32F);
             colorHist = colorHist.reshape(1, 1);
             shapeDesc = shapeDesc.reshape(1, 1);
             textureDesc = textureDesc.reshape(1, 1);
+        
+        // Check if all descriptors have the same number of columns. If not, you need to pad them.
+            int maxCols = std::max({colorHist.cols, shapeDesc.cols, textureDesc.cols});
+            cv::Mat temp;
+            if (colorHist.cols < maxCols) {
+            temp = cv::Mat::zeros(1, maxCols - colorHist.cols, colorHist.type());
+            cv::hconcat(colorHist, temp, colorHist);
+        }
+            if (shapeDesc.cols < maxCols) {
+            cv::Mat temp = cv::Mat::zeros(1, maxCols - shapeDesc.cols, shapeDesc.type());
+            cv::hconcat(shapeDesc, temp, shapeDesc);
+        }
+            if (textureDesc.cols < maxCols) {
+            cv::Mat temp = cv::Mat::zeros(1, maxCols - textureDesc.cols, textureDesc.type());
+            cv::hconcat(textureDesc, temp, textureDesc);
+        }
+
+           
             if (colorHist.type() != shapeDesc.type() || colorHist.type() != textureDesc.type() ||
             colorHist.rows != 1 || shapeDesc.rows != 1 || textureDesc.rows != 1) {
             std::cerr << "Error: Feature vectors have different types or multiple rows." << std::endl;
             return;
             }
-}
 
-// Concatenate the feature vectors
-std::vector<cv::Mat> features = { colorHist, shapeDesc, textureDesc };
-cv::Mat featureVector;
-cv::hconcat(features, featureVector);
-
+            // Concatenate the feature vectors
+            std::vector<cv::Mat> features = { colorHist, shapeDesc, textureDesc };
+            cv::Mat featureVector;
+            cv::hconcat(std::vector<cv::Mat>{colorHist, shapeDesc, textureDesc}, featureVector);
             // cv::Mat features = extractFeatures(image);
             std::cout << "test_6_debug" << std::endl;
             featureDatabase.push_back({entry.path().filename().string(), featureVector});
         }
+        std::cout << "Feature database built successfully." << std::endl;
     }
 }
 
