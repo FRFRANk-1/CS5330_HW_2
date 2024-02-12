@@ -16,25 +16,47 @@ void BananaCBIR::buildFeatureDatabase() {
             cv::Mat shapeDesc = calculateShapeDescriptor(image);
             cv::Mat textureDesc = calculateTextureDescriptor(image);
 
-            std::cout << "test_2_debug" << std::endl;
+for (const auto& entry : std::filesystem::directory_iterator(databaseDir)) {
+    std::cout << "Processing file: " << entry.path().filename().string() << std::endl;
+    cv::Mat image = cv::imread(entry.path().string());
+    if (!image.empty()) {}
+
+            cv::Mat colorHist = calculateColorHistogram(image);
+            cv::Mat shapeDesc = calculateShapeDescriptor(image);
+            cv::Mat textureDesc = calculateTextureDescriptor(image);
+
+            if (colorHist.type() != CV_32F) colorHist.convertTo(colorHist, CV_32F);
+            if (shapeDesc.type() != CV_32F) shapeDesc.convertTo(shapeDesc, CV_32F);
+            if (textureDesc.type() != CV_32F) textureDesc.convertTo(textureDesc, CV_32F);
+// Check if all descriptors have the same number of columns. If not, you need to pad them.
+int maxCols = std::max({colorHist.cols, shapeDesc.cols, textureDesc.cols});
+if (colorHist.cols < maxCols) {
+    cv::Mat temp = cv::Mat::zeros(1, maxCols - colorHist.cols, colorHist.type());
+    cv::hconcat(colorHist, temp, colorHist);
+}
+if (shapeDesc.cols < maxCols) {
+    cv::Mat temp = cv::Mat::zeros(1, maxCols - shapeDesc.cols, shapeDesc.type());
+    cv::hconcat(shapeDesc, temp, shapeDesc);
+}
+if (textureDesc.cols < maxCols) {
+    cv::Mat temp = cv::Mat::zeros(1, maxCols - textureDesc.cols, textureDesc.type());
+    cv::hconcat(textureDesc, temp, textureDesc);
+}
 
             colorHist = colorHist.reshape(1, 1);
             shapeDesc = shapeDesc.reshape(1, 1);
             textureDesc = textureDesc.reshape(1, 1);
-
             if (colorHist.type() != shapeDesc.type() || colorHist.type() != textureDesc.type() ||
             colorHist.rows != 1 || shapeDesc.rows != 1 || textureDesc.rows != 1) {
             std::cerr << "Error: Feature vectors have different types or multiple rows." << std::endl;
             return;
             }
+}
 
-            std::vector<cv::Mat> features = { colorHist, shapeDesc, textureDesc };
-
-            std::cout << "test_4_debug" << std::endl;
-            cv::Mat featureVector;
-
-            std::cout << "test_5_debug" << std::endl;
-            cv::hconcat(features, featureVector);
+// Concatenate the feature vectors
+std::vector<cv::Mat> features = { colorHist, shapeDesc, textureDesc };
+cv::Mat featureVector;
+cv::hconcat(features, featureVector);
 
             // cv::Mat features = extractFeatures(image);
             std::cout << "test_6_debug" << std::endl;
