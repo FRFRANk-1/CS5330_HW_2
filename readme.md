@@ -5,11 +5,9 @@
 
 ## CS5330 Project_2: Content-based Image Retrieva
 
-## Project due data: 2/10/2024 11:59:59
-## GradeScope upload date: 2/12/2024
-## Time travel days Apply for late submission: 2 days
-
-
+Project due data: 2/10/2024 11:59:59
+GradeScope upload date: 2/12/2024
+Time travel days Apply for late submission: 2 days
 
 ## Instruction to execute Content-based Image Retrieva app
 To use makehist.cpp:
