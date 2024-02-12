@@ -16,10 +16,11 @@ struct ImageEmbedding {
 
 class DeepEmbedding {
 public:
-    // DeepEmbedding::DeepEmbedding(const std::string& csvFilePath) : csvFilePath(csvFilePath) {}
-
-    DeepEmbedding(const std::string& csvFilePath, const std::string& imageDirPath) 
+    DeepEmbedding::DeepEmbedding(const std::string& csvFilePath, const std::string& imageDirPath) 
     : csvFilePath(csvFilePath), imageDatabaseDir(imageDirPath) {}
+
+    // DeepEmbedding(const std::string& csvFilePath, const std::string& imageDirPath) 
+    // : csvFilePath(csvFilePath), imageDatabaseDir(imageDirPath) {}
     void loadEmbeddings();
     std::vector<ImageEmbedding> findNearestNeighbors(const std::string& targetFilename, int topK = 3, const std::string& distanceMetric = "cosine") const;
     void displayResults(const std::vector<ImageEmbedding>& results) const;

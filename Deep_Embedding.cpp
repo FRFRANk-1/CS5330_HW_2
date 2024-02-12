@@ -31,16 +31,6 @@ void DeepEmbedding::loadEmbeddings() {
 }
 
 std::vector<ImageEmbedding> DeepEmbedding::findNearestNeighbors(const std::string& targetFilename, int topK, const std::string& distanceMetric) const {
-    // Placeholder for finding nearest neighbors logic
-    // You'll need to first find the embedding for `targetFilename` in `embeddings`
-    // Then, calculate distances to all other embeddings and sort them
-    if (embeddings.empty()) {
-        
-        std::cerr << "Embedding not loaded. Call loadEmbedding() first." << std::endl;
-        return results;
-    }
-    
-    // Placeholder for finding nearest neighbors logic
     std::vector<float> targetEmbedding;
     for(const auto& embedding : embeddings) {
         if(embedding.filename == targetFilename) {
@@ -49,6 +39,15 @@ std::vector<ImageEmbedding> DeepEmbedding::findNearestNeighbors(const std::strin
         }
     }
 
+    // Check if the target embedding was found
+    if (targetEmbedding.empty()) {
+        std::cerr << "Target embedding not found for filename: " << targetFilename << std::endl;
+        return {}; // Return an empty vector
+    }
+
+    // Create a temporary vector for distances
+    std::vector<std::pair<float, std::string>> distances;
+
     for(const auto& embedding : embeddings) {
         if(embedding.filename != targetFilename) {
             float distance = 0.0f;
@@ -56,40 +55,46 @@ std::vector<ImageEmbedding> DeepEmbedding::findNearestNeighbors(const std::strin
                 distance = calculateSumSquareDistance(targetEmbedding, embedding.embedding);
             } else if (distanceMetric == "cosine") {
                 distance = calculateCosineDistance(targetEmbedding, embedding.embedding);
-            } else {
-                std::cerr << "Invalid distance metric: " << distanceMetric << std::endl;
-                return results;
             }
-            results.emplace_back(embedding.filename, distance);
+            distances.emplace_back(distance, embedding.filename);
         }
     }
 
-    std::sort(results.begin(), results.end, [](const auto& lhs, const auto& rhs) {
-        return lhs.distance < rhs.distance;
+    // Sort based on distance
+    std::sort(distances.begin(), distances.end(), [](const auto& a, const auto& b) {
+        return a.first < b.first;
     });
 
-    return std::vector<ImageEmbedding>results.begin(), results.begin() + topK;
-}
+    // Extract the top K results
+    std::vector<ImageEmbedding> nearestNeighbors;
+    for (int i = 0; i < std::min(topK, static_cast<int>(distances.size())); ++i) {
+        auto& embeddingPair = distances[i];
+        for (const auto& embedding : embeddings) {
+            if (embedding.filename == embeddingPair.second) {
+                nearestNeighbors.push_back(embedding);
+                break;
+            }
+        }
+    }
 
+    return nearestNeighbors;
+}
 
 void DeepEmbedding::displayResults(const std::vector<ImageEmbedding>& results) const {
     for (const auto& result : results) {
         std::cout << "Match: " << result.filename << std::endl;
-        // Optionally, display the image using OpenCV
-        std::string imagePath = /* Construct the path to your image */;
+        std::string imagePath = imageDatabaseDir + "/" + result.filename; // Make sure imageDatabaseDir is correctly set up in your class
         cv::Mat img = cv::imread(imagePath);
         if (!img.empty()) {
             cv::imshow("Match", img);
-            int k = cv::waitKey(0);
-            if (k == 27) {
-                break;
-            } else {
-                std::cerr:: "Failed to load image:" << imagePath << std::endl;
-            }
+            cv::waitKey(0); // Wait for any key press
+        } else {
+            std::cerr << "Failed to load image: " << imagePath << std::endl;
         }
     }
     cv::destroyAllWindows();
 }
+
 
 float DeepEmbedding::calculateCosineDistance(const std::vector<float>& v1, const std::vector<float>& v2) const {
     // Placeholder for cosine distance calculation
@@ -116,9 +121,9 @@ float DeepEmbedding::calculateSumSquareDistance(const std::vector<float>& v1, co
 }
 
 void Deep_Embedding(const std::string& targetImageFilename, const std::string& csvFilePath, const std::string& imageDatabaseDir, int number_of_outputs) {
-    DeepEmbedding deepEmbedding(csvFilePath);
+    DeepEmbedding deepEmbedding(csvFilePath, imageDatabaseDir);
     deepEmbedding.loadEmbeddings();
-    std::vector<ImageEmbedding> results = deepEmbedding.findNearestNeighbors(targetImageFilename, number_of_outputs, "cosine");
+    auto results = deepEmbedding.findNearestNeighbors(targetImageFilename, number_of_outputs, "cosine");
     deepEmbedding.displayResults(results);
 }
 
