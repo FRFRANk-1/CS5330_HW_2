@@ -329,6 +329,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\NEU study file\5330\HW_2\Histogram_Matching.cpp" />
     <ClCompile Include="D:\NEU study file\5330\HW_2\baseline_matching.cpp" />
     <ClCompile Include="D:\NEU study file\5330\HW_2\multiple_histogram_matching.cpp" />
+    <ClCompile Include="D:\NEU study file\5330\HW_2\texture_color.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:\NEU study file\5330\HW_2\build\ZERO_CHECK.vcxproj">
