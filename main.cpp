@@ -13,6 +13,7 @@
 #include "texture_color.h"
 #include "Deep_Embedding.h"
 #include "Color_histogram.h"
+#include "banana.h"
 #include <filesystem>
 
 int main(int argc, char** argv) {
@@ -61,6 +62,10 @@ int main(int argc, char** argv) {
         } else if (feature_type == "color_histogram" ) {
             //D:\\NEU study file\\5330\\HW_2\\DJI_04233.jpg
         Color_Histogram_Matching(target_image, image_database_dir, comparisonMethodStr, number_of_output);
+        } else if(feature_type == "banana") {
+            //D:\\NEU study file\\5330\\HW_2\\banana.jpg
+            int top_k = 5; // Display top 5 results
+            banana_matching(target_image, image_database_dir, top_k);
         }
         else {
             std :: cerr << "Invalid feature type: " << feature_type << std :: endl;

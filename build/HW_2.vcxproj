@@ -332,6 +332,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\NEU study file\5330\HW_2\texture_color.cpp" />
     <ClCompile Include="D:\NEU study file\5330\HW_2\Deep_Embedding.cpp" />
     <ClCompile Include="D:\NEU study file\5330\HW_2\Color_Histogram.cpp" />
+    <ClCompile Include="D:\NEU study file\5330\HW_2\banana.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:\NEU study file\5330\HW_2\build\ZERO_CHECK.vcxproj">

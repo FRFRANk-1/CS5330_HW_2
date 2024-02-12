@@ -66,3 +66,8 @@ terminal input:
  .\HW_2.exe "pic.0164.jpg" "D:\NEU study file\5330\HW_2\olympus" "Deep_Embedding" "cosine" "NA" 3 
 
  ## task 6
+terminal input:
+ .\HW_2.exe "D:\NEU study file\5330\HW_2\olympus\pic.1072.jpg" "D:\NEU study file\5330\HW_2\olympus" "texture_color" "SSD" "intersection" 3 
+
+ ## extendition:
+ 

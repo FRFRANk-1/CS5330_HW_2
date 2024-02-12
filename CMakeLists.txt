@@ -16,6 +16,7 @@ multiple_histogram_matching.cpp
 texture_color.cpp
 Deep_Embedding.cpp
 Color_Histogram.cpp
+banana.cpp
 )
 target_compile_features(HW_2 PUBLIC cxx_std_17) 
 
