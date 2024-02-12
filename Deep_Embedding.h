@@ -36,3 +36,4 @@ private:
 
 void Deep_Embedding(const std::string& targetImageFilename, const std::string& csvFilePath, const std::string& imageDatabaseDir, int number_of_output);
 #endif // DEEP_EMBEDDING_H
+
