@@ -16,6 +16,9 @@
     <ClCompile Include="D:\NEU study file\5330\HW_2\texture_color.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\NEU study file\5330\HW_2\Deep_Embedding.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="D:\NEU study file\5330\HW_2\CMakeLists.txt" />

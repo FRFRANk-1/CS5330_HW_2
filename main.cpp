@@ -11,6 +11,7 @@
 #include "histogram_matching.h"
 #include "multiple_histogram_matching.h"
 #include "texture_color.h"
+#include "Deep_Embedding.h"
 #include <filesystem>
 
 int main(int argc, char** argv) {
@@ -52,7 +53,12 @@ int main(int argc, char** argv) {
         performMultipleHistogramMatching(target_image, image_database_dir, number_of_output);
         } else if (feature_type == "texture_color") {
         texture_color(target_image, image_database_dir, number_of_output);
-        } else {
+        } else if (feature_type == "Deep_Embedding") {
+            std::string csvFilePath = "D:\\NEU study file\\5330\\HW_2\\ResNet18_olym.csv";
+            std::string imageDatabaseDir = argv[2];
+            Deep_Embedding(target_image, csvFilePath, imageDatabaseDir, number_of_output);
+        }
+        else {
             std :: cerr << "Invalid feature type: " << feature_type << std :: endl;
             return -1;
         }
