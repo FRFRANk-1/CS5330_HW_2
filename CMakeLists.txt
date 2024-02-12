@@ -14,7 +14,9 @@ Histogram_Matching.cpp
 baseline_matching.cpp 
 multiple_histogram_matching.cpp 
 texture_color.cpp
-Deep_Embedding.cpp)
+Deep_Embedding.cpp
+Color_Histogram.cpp
+)
 target_compile_features(HW_2 PUBLIC cxx_std_17) 
 
 target_link_libraries( HW_2 ${OpenCV_LIBS})
